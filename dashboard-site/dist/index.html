@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Live AI evaluation runs, metrics, and failure analysis.">
+  <title>AI Evaluation Lab — Run Console</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#overview" aria-label="AI Evaluation Lab home">
+      <span class="brand-mark" aria-hidden="true">A/E</span>
+      <span><strong>AI Evaluation Lab</strong><small>Evidence over intuition</small></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a class="active" href="#overview">Run console</a>
+      <a href="#cases">Cases</a>
+      <a href="#method">Method</a>
+    </nav>
+    <a class="github-link" href="https://github.com/shekharchaudhary/ai-evaluation-lab">View source ↗</a>
+  </header>
+
+  <main>
+    <section class="hero" id="overview">
+      <div>
+        <p class="eyebrow"><span class="pulse-dot"></span> Experiment 001 · Position bias</p>
+        <h1>Watch an evaluator<br><em>change its mind.</em></h1>
+        <p class="lede">Every response pair is judged twice—once in A/B order and once in B/A order. The console maps both verdicts back to the original answers and exposes order-sensitive failures.</p>
+      </div>
+      <div class="run-panel">
+        <div class="run-heading">
+          <div><span>Evaluator</span><strong>First-position control v0</strong></div>
+          <span class="status ready" id="statusBadge">Ready</span>
+        </div>
+        <div class="run-config">
+          <div><span>Dataset</span><strong>12 pairs</strong></div>
+          <div><span>Orders</span><strong>AB + BA</strong></div>
+          <div><span>Runs</span><strong>24</strong></div>
+        </div>
+        <button class="run-button" id="runButton"><span>Run evaluation</span><kbd>R</kbd></button>
+        <p class="control-note">This is an intentionally biased control—not an LLM result.</p>
+      </div>
+    </section>
+
+    <section class="progress-shell" aria-live="polite">
+      <div class="progress-meta"><span id="progressLabel">Waiting to run</span><span id="progressCount">0 / 24 judgments</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="event-stream" id="eventStream"><span class="muted">Run events will appear here.</span></div>
+    </section>
+
+    <section class="metric-grid" aria-label="Evaluation metrics">
+      <article class="metric-card primary">
+        <span>Paired-order flip rate</span>
+        <strong id="flipRate">—</strong>
+        <small id="flipInterval">95% CI pending</small>
+        <div class="mini-bars" id="flipBars" aria-hidden="true"></div>
+      </article>
+      <article class="metric-card">
+        <span>First-position preference</span>
+        <strong id="firstPreference">—</strong>
+        <small>Across non-tie judgments</small>
+        <div class="meter"><i id="preferenceMeter"></i></div>
+      </article>
+      <article class="metric-card">
+        <span>Human agreement</span>
+        <div class="split-metric"><div><strong id="agreementAB">—</strong><small>A/B order</small></div><div><strong id="agreementBA">—</strong><small>B/A order</small></div></div>
+      </article>
+      <article class="metric-card finding">
+        <span>Interpretation</span>
+        <p id="interpretation">Run the control to validate that the harness can detect order-sensitive judging.</p>
+      </article>
+    </section>
+
+    <section class="results-section" id="cases">
+      <div class="section-heading">
+        <div><p class="eyebrow">Case-level evidence</p><h2>Inspect every changed verdict.</h2></div>
+        <div class="filters" role="group" aria-label="Filter cases">
+          <button class="filter active" data-filter="all">All <span>12</span></button>
+          <button class="filter" data-filter="flipped">Flipped <span id="flippedCount">0</span></button>
+          <button class="filter" data-filter="agreed">Stable <span id="stableCount">0</span></button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Case</th><th>Category</th><th>Human</th><th>A/B verdict</th><th>B/A verdict</th><th>Outcome</th></tr></thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="method-section" id="method">
+      <div><p class="eyebrow">Measurement contract</p><h2>A score is only useful when its method is inspectable.</h2></div>
+      <ol>
+        <li><span>01</span><div><strong>Freeze the evidence</strong><p>Version the cases, human labels, rubric, evaluator, and parameters.</p></div></li>
+        <li><span>02</span><div><strong>Swap presentation order</strong><p>Judge identical response pairs as AB and BA.</p></div></li>
+        <li><span>03</span><div><strong>Canonicalize verdicts</strong><p>Map FIRST and SECOND back to original A/B identities.</p></div></li>
+        <li><span>04</span><div><strong>Audit the failures</strong><p>Report uncertainty and inspect each flip instead of hiding it in an average.</p></div></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer><span>AI Evaluation Lab · 2026</span><span>Hypotheses → evidence → revision</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
